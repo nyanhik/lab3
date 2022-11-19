@@ -19,19 +19,32 @@ class StreamCipher extends Gost {
   
     return binary;
   }
+
+  crypt(text, mode) {
+    return super.crypt(text, mode);
+  }
     
-  genLongKey(text, key) { // генерируем ключ шифрования на основе ГОСТ
+  genLongKey(text) { // генерируем ключ шифрования на основе ГОСТ
       let textForLongKey = this.getBinary(text);
       let longKey = "";
       for (let i = 0; i <= textForLongKey.length -1; i++) {
-        longKey = String(longKey.concat(super.crypt(String(textForLongKey[i]),'encrypt')));
+        longKey = String(longKey.concat(this.crypt(String(textForLongKey[i]),'encrypt')));
       }
       longKey = this.getBinary(longKey);
       return longKey
   
   }
   
+  getText(binary) { //двоичку в строку
+    let string = "";
+    for (let i = 0; i < binary.length; i += 8) {
+      let current = binary.slice(i, i + 8);
+      let ch = String.fromCharCode(parseInt(current, 2));
+      string += ch;
+    }
   
+    return string;
+  }
   
   xor(binary1, binary2) {
     let outcome = "";
@@ -49,40 +62,25 @@ class StreamCipher extends Gost {
   }
 }
 
-  
-function getText(binary) { //двоичку в строку
-  let string = "";
-  for (let i = 0; i < binary.length; i += 8) {
-    let current = binary.slice(i, i + 8);
-    let ch = String.fromCharCode(parseInt(current, 2));
-    string += ch;
-  }
-
-  return string;
-}
-
 function encryptMessage() { //зашифровать
   let plaintext = document.getElementById("input").value;
   let key = document.getElementById("key").value;
   let streamCipher = new StreamCipher(key);
   let binary1 = streamCipher.getBinary(plaintext);
-  let binary2 = streamCipher.getBinary(key);
 
   let longKey = streamCipher.getBinary(streamCipher.genLongKey(plaintext, key));
 
   let outcome = streamCipher.xor(binary1, longKey);
 
 
-  document.getElementById("output").innerHTML = outcome;
+  document.getElementById("output").value = outcome;
 }
 
 
 function decryptMessage() { //расшифровать
   let binary1 = document.getElementById("input").value;
   let key = document.getElementById("key").value;
-  let streamCipher = new StreamCipher(getText(binary1), key);
-
-  let binary2 = streamCipher.getBinary(key);
+  let streamCipher = new StreamCipher(key);
 
   let longKey = streamCipher.getBinary(streamCipher.genLongKey(streamCipher.getText(binary1), key));
 
@@ -90,7 +88,7 @@ function decryptMessage() { //расшифровать
 
   let string = streamCipher.getText(outcome);
 
-  document.getElementById("output").innerHTML = string;
+  document.getElementById("output").value = string;
 }
 
 document.getElementById('encrypt').addEventListener('click', () => {
