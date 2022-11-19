@@ -9,15 +9,16 @@
 				<span><h1>Поточный шифр (только латинница)</h1></span>
 	</header>
 	<h2>  </h2>
-	<script src="js/main.js"></script>
 	<div class="row">
 		<div class="col-lg-6 col-sm-11">
 				<textarea rows="7" id="input" placeholder="Входной тест"></textarea>
 				<textarea rows="7" id="output" placeholder="выход"></textarea> <br> <br>
 				<label>Секретный ключ: (8 символов)</label><br>
 				<input type="text" id="key" placeholder="Ключ шифрования"><br><br>
-				<input type="button" id="encrypt" value="Зашифровать" onclick="encryptMessage()"/>
-        <input type="button" id="decrypt" value="Расшифровать" onclick="decryptMessage()"/><br><br>
+				<input type="button" id="encrypt" value="Зашифровать"/>
+        		<input type="button" id="decrypt" value="Расшифровать"/><br><br>
 		</div>
 	</div>
+
+	<script type="module" src="./js/main.js"></script>
 </body>
